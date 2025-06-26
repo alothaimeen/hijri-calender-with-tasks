@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { Task, TaskFilter as TaskFilterType } from '@/types/task';
+import { Task } from '@/types/task';
 import TaskInput from '@/components/TaskInput';
 import CalendarView from '@/components/CalendarView';
 import TaskStats from '@/components/TaskStats';
+import TaskList from '@/components/TaskList';
 import { Separator } from '@/components/ui/separator';
-import { CheckSquare, Sparkles, Calendar } from 'lucide-react';
+import { Calendar, Sparkles } from 'lucide-react';
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -44,6 +45,10 @@ const Index = () => {
     ));
   };
 
+  const deleteTask = (id: string) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
   const taskCounts = {
     all: tasks.length,
     active: tasks.filter(task => !task.completed).length,
@@ -51,45 +56,55 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50" dir="rtl">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Sparkles className="w-8 h-8 text-blue-500" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              التقويم الهجري - مدير المهام
+            <Calendar className="w-10 h-10 text-emerald-600" />
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              التقويم الهجري
             </h1>
-            <Calendar className="w-8 h-8 text-indigo-500" />
+            <Sparkles className="w-8 h-8 text-blue-500" />
           </div>
-          <p className="text-gray-600 text-lg">
-            نظم مهامك ومناسباتك وفقاً للتقويم الهجري - أم القرى
+          <p className="text-gray-600 text-xl font-medium">
+            تقويم أم القرى - نظم مهامك ومناسباتك الإسلامية
           </p>
         </div>
 
-        {/* Stats */}
-        <TaskStats 
-          totalTasks={taskCounts.all}
-          completedTasks={taskCounts.completed}
-          activeTasks={taskCounts.active}
-        />
-
-        {/* Task Input */}
-        <TaskInput onAddTask={addTask} />
-
-        <Separator className="my-6" />
-
-        {/* Calendar View */}
+        {/* التقويم الهجري - العنصر الأساسي */}
         <CalendarView 
           tasks={tasks}
           onAddTask={addTask}
           onToggleTask={toggleTaskComplete}
         />
 
+        <Separator className="my-8 bg-gradient-to-r from-emerald-200 to-blue-200 h-1" />
+
+        {/* قسم المهام والإحصائيات */}
+        <div className="space-y-6">
+          {/* إحصائيات المهام */}
+          <TaskStats 
+            totalTasks={taskCounts.all}
+            completedTasks={taskCounts.completed}
+            activeTasks={taskCounts.active}
+          />
+
+          {/* إدخال المهام الجديدة */}
+          <TaskInput onAddTask={addTask} />
+
+          {/* قائمة المهام */}
+          <TaskList 
+            tasks={tasks}
+            onToggleTask={toggleTaskComplete}
+            onDeleteTask={deleteTask}
+          />
+        </div>
+
         {/* Footer */}
         <div className="text-center mt-16 pt-8 border-t border-gray-200">
           <p className="text-gray-500 text-sm">
-            تم إنشاؤه بـ ❤️ لمساعدتك على تنظيم حياتك وفقاً للتقويم الهجري
+            تم إنشاؤه بـ ❤️ لخدمة المسلمين - التقويم الهجري أم القرى
           </p>
         </div>
       </div>

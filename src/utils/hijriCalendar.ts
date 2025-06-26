@@ -1,6 +1,5 @@
 
-import moment from 'moment';
-import 'moment/locale/ar-sa';
+import moment from 'moment-hijri';
 import { HijriDate, CalendarDay, CalendarEvent } from '@/types/calendar';
 import { Task } from '@/types/task';
 
@@ -15,30 +14,31 @@ const hijriMonths = [
 const arabicDays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
 export function getHijriDate(gregorianDate: Date): HijriDate {
-  const momentDate = moment(gregorianDate);
-  
-  // تحويل تقريبي للتاريخ الهجري (يمكن تحسينه لاحقاً بمكتبة أكثر دقة)
-  const hijriYear = Math.floor((gregorianDate.getFullYear() - 622) * 1.030684);
-  const dayOfYear = Math.floor((gregorianDate.getTime() - new Date(gregorianDate.getFullYear(), 0, 1).getTime()) / (1000 * 60 * 60 * 24));
-  const hijriMonth = Math.floor(dayOfYear / 30) % 12;
-  const hijriDay = (dayOfYear % 30) + 1;
+  const hijriMoment = moment(gregorianDate).iYear();
+  const hijriMonth = moment(gregorianDate).iMonth();
+  const hijriDay = moment(gregorianDate).iDate();
   
   return {
     hijriDay: hijriDay,
     hijriMonth: hijriMonth,
-    hijriYear: hijriYear + 1400,
+    hijriYear: hijriMoment,
     gregorianDate: gregorianDate,
     dayName: arabicDays[gregorianDate.getDay()],
     monthName: hijriMonths[hijriMonth]
   };
 }
 
-export function generateCalendarMonth(year: number, month: number): CalendarDay[] {
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startDate = new Date(firstDay);
+export function generateHijriCalendarMonth(hijriYear: number, hijriMonth: number): CalendarDay[] {
+  // الحصول على أول يوم في الشهر الهجري
+  const firstHijriDay = moment().iYear(hijriYear).iMonth(hijriMonth).iDate(1);
+  const firstGregorianDate = firstHijriDay.toDate();
+  
+  // الحصول على آخر يوم في الشهر الهجري
+  const lastHijriDay = moment().iYear(hijriYear).iMonth(hijriMonth + 1).iDate(0);
+  const lastGregorianDate = lastHijriDay.toDate();
   
   // البداية من يوم الأحد
+  const startDate = new Date(firstGregorianDate);
   startDate.setDate(startDate.getDate() - startDate.getDay());
   
   const days: CalendarDay[] = [];
@@ -47,7 +47,7 @@ export function generateCalendarMonth(year: number, month: number): CalendarDay[
   // إنشاء 42 يوم (6 أسابيع × 7 أيام)
   for (let i = 0; i < 42; i++) {
     const hijriDate = getHijriDate(currentDate);
-    const isCurrentMonth = currentDate.getMonth() === month;
+    const isCurrentMonth = hijriDate.hijriMonth === hijriMonth;
     const isToday = currentDate.toDateString() === new Date().toDateString();
     
     days.push({
@@ -63,21 +63,29 @@ export function generateCalendarMonth(year: number, month: number): CalendarDay[
   return days;
 }
 
+export function getCurrentHijriDate(): { year: number; month: number } {
+  const now = moment();
+  return {
+    year: now.iYear(),
+    month: now.iMonth()
+  };
+}
+
 export function getIslamicOccasions(hijriMonth: number, hijriDay: number): string[] {
   const occasions: { [key: string]: string } = {
-    '1-1': 'رأس السنة الهجرية',
-    '1-10': 'يوم عاشوراء',
-    '3-12': 'مولد النبي محمد ﷺ',
-    '7-27': 'الإسراء والمعراج',
-    '8-15': 'ليلة النصف من شعبان',
-    '9-1': 'بداية شهر رمضان',
-    '9-27': 'ليلة القدر',
-    '10-1': 'عيد الفطر',
-    '12-9': 'يوم عرفة',
-    '12-10': 'عيد الأضحى'
+    '0-1': 'رأس السنة الهجرية',
+    '0-10': 'يوم عاشوراء',
+    '2-12': 'مولد النبي محمد ﷺ',
+    '6-27': 'الإسراء والمعراج',
+    '7-15': 'ليلة النصف من شعبان',
+    '8-1': 'بداية شهر رمضان',
+    '8-27': 'ليلة القدر',
+    '9-1': 'عيد الفطر',
+    '11-9': 'يوم عرفة',
+    '11-10': 'عيد الأضحى'
   };
   
-  const key = `${hijriMonth + 1}-${hijriDay}`;
+  const key = `${hijriMonth}-${hijriDay}`;
   return occasions[key] ? [occasions[key]] : [];
 }
 
