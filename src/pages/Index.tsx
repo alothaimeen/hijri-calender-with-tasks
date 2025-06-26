@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { Task, TaskFilter } from '@/types/task';
+import { Task, TaskFilter as TaskFilterType } from '@/types/task';
 import TaskInput from '@/components/TaskInput';
 import TaskItem from '@/components/TaskItem';
 import TaskFilter from '@/components/TaskFilter';
@@ -10,7 +9,7 @@ import { CheckSquare, Sparkles } from 'lucide-react';
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [filter, setFilter] = useState<TaskFilter>('all');
+  const [filter, setFilter] = useState<TaskFilterType>('all');
 
   // تحميل المهام من التخزين المحلي عند بدء التطبيق
   useEffect(() => {
