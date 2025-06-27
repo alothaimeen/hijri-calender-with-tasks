@@ -3,13 +3,15 @@ import React from 'react';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import { printer } from 'lucide-react';
 
 interface CalendarHeaderProps {
   currentHijriDate: { year: number; month: number };
   onNavigateMonth: (direction: 'prev' | 'next') => void;
+  onPrint?: () => void;
 }
 
-const CalendarHeader = ({ currentHijriDate, onNavigateMonth }: CalendarHeaderProps) => {
+const CalendarHeader = ({ currentHijriDate, onNavigateMonth, onPrint }: CalendarHeaderProps) => {
   const hijriMonths = [
     'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الثانية',
     'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
@@ -19,14 +21,28 @@ const CalendarHeader = ({ currentHijriDate, onNavigateMonth }: CalendarHeaderPro
     <Card className="mb-6 shadow-xl border-0 bg-gradient-to-r from-emerald-50 via-blue-50 to-indigo-50">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => onNavigateMonth('next')}
-            className="hover:bg-emerald-100 text-emerald-700"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => onNavigateMonth('next')}
+              className="hover:bg-emerald-100 text-emerald-700"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            
+            {onPrint && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onPrint}
+                className="hover:bg-emerald-100 text-emerald-700 border-emerald-300"
+              >
+                <printer className="w-4 h-4 ml-2" />
+                طباعة التقويم
+              </Button>
+            )}
+          </div>
           
           <div className="text-center">
             <h2 className="text-3xl font-bold text-emerald-800 mb-1">

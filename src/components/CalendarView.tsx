@@ -5,6 +5,7 @@ import { Task } from '@/types/task';
 import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getCurrentHijriDate } from '@/utils/hijriCalendar';
 import CalendarHeader from '@/components/CalendarHeader';
 import CalendarGrid from '@/components/CalendarGrid';
+import PrintableCalendar from '@/components/PrintableCalendar';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -15,6 +16,7 @@ interface CalendarViewProps {
 const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => {
   const [currentHijriDate, setCurrentHijriDate] = useState(() => getCurrentHijriDate());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
+  const [showPrintView, setShowPrintView] = useState(false);
 
   useEffect(() => {
     const days = generateHijriCalendarMonth(currentHijriDate.year, currentHijriDate.month);
@@ -59,18 +61,37 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
     });
   };
 
+  const handlePrint = () => {
+    setShowPrintView(true);
+    setTimeout(() => {
+      window.print();
+      setShowPrintView(false);
+    }, 100);
+  };
+
   return (
     <div className="w-full">
       <CalendarHeader 
         currentHijriDate={currentHijriDate}
         onNavigateMonth={navigateHijriMonth}
+        onPrint={handlePrint}
       />
       
-      <CalendarGrid 
-        calendarDays={calendarDays}
-        onAddTask={onAddTask}
-        onToggleTask={onToggleTask}
-      />
+      <div className="print:hidden">
+        <CalendarGrid 
+          calendarDays={calendarDays}
+          onAddTask={onAddTask}
+          onToggleTask={onToggleTask}
+        />
+      </div>
+
+      {showPrintView && (
+        <PrintableCalendar 
+          tasks={tasks}
+          startYear={currentHijriDate.year}
+          startMonth={currentHijriDate.month}
+        />
+      )}
     </div>
   );
 };
