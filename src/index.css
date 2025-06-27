@@ -116,49 +116,26 @@
     background: white !important;
   }
   
-  /* Hide everything by default during print */
-  * {
-    visibility: hidden;
+  /* Show only the printable calendar during print */
+  .print-calendar {
+    display: block !important;
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    background: white !important;
+    color: black !important;
   }
   
-  /* Show only the printable calendar */
-  .print-calendar,
   .print-calendar * {
     visibility: visible !important;
-    display: block !important;
   }
   
-  .print-calendar {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: white;
-    color: black;
-  }
-  
-  /* Hide specific elements during print */
-  .print\:hidden,
-  .print\:hidden * {
+  /* Hide everything else during print */
+  .print\\:hidden {
     display: none !important;
-    visibility: hidden !important;
   }
   
-  /* Show specific elements during print */  
-  .print\:block {
-    display: block !important;
-    visibility: visible !important;
-  }
-  
-  /* Hide regular content during print */
-  .container:not(.print-calendar),
-  header,
-  nav,
-  .task-section,
-  .stats-section,
-  .input-section,
-  .list-section {
+  .print\\:hidden * {
     display: none !important;
-    visibility: hidden !important;
   }
 }

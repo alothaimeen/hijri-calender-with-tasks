@@ -56,7 +56,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 print:hidden" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50" dir="rtl">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="text-center mb-8 print:hidden">
@@ -82,9 +82,9 @@ const Index = () => {
         <Separator className="my-8 bg-gradient-to-r from-emerald-200 to-blue-200 h-1 print:hidden" />
 
         {/* قسم المهام والإحصائيات */}
-        <div className="space-y-6 print:hidden task-section">
+        <div className="space-y-6 print:hidden">
           {/* إحصائيات المهام */}
-          <div className="stats-section">
+          <div>
             <TaskStats 
               totalTasks={taskCounts.all}
               completedTasks={taskCounts.completed}
@@ -93,12 +93,12 @@ const Index = () => {
           </div>
 
           {/* إدخال المهام الجديدة */}
-          <div className="input-section">
+          <div>
             <TaskInput onAddTask={addTask} />
           </div>
 
           {/* قائمة المهام */}
-          <div className="list-section">
+          <div>
             <TaskList 
               tasks={tasks}
               onToggleTask={toggleTaskComplete}

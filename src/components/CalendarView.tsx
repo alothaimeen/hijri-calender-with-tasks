@@ -73,30 +73,29 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
     }, 100);
   };
 
+  if (isPrintMode) {
+    return (
+      <PrintableCalendar 
+        tasks={tasks}
+        startYear={currentHijriDate.year}
+        startMonth={currentHijriDate.month}
+      />
+    );
+  }
+
   return (
     <div className="w-full">
-      <div className="print:hidden">
-        <CalendarHeader 
-          currentHijriDate={currentHijriDate}
-          onNavigateMonth={navigateHijriMonth}
-          onPrint={handlePrint}
-        />
-        
-        <CalendarGrid 
-          calendarDays={calendarDays}
-          onAddTask={onAddTask}
-          onToggleTask={onToggleTask}
-        />
-      </div>
-
-      {/* Always render the printable calendar, but only show it during print */}
-      <div className={isPrintMode ? '' : 'hidden'}>
-        <PrintableCalendar 
-          tasks={tasks}
-          startYear={currentHijriDate.year}
-          startMonth={currentHijriDate.month}
-        />
-      </div>
+      <CalendarHeader 
+        currentHijriDate={currentHijriDate}
+        onNavigateMonth={navigateHijriMonth}
+        onPrint={handlePrint}
+      />
+      
+      <CalendarGrid 
+        calendarDays={calendarDays}
+        onAddTask={onAddTask}
+        onToggleTask={onToggleTask}
+      />
     </div>
   );
 };
