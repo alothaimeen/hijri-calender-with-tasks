@@ -56,10 +56,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-blue-50 to-indigo-50 print:hidden" dir="rtl">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 print:hidden">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Calendar className="w-10 h-10 text-emerald-600" />
             <h1 className="text-5xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
@@ -79,30 +79,36 @@ const Index = () => {
           onToggleTask={toggleTaskComplete}
         />
 
-        <Separator className="my-8 bg-gradient-to-r from-emerald-200 to-blue-200 h-1" />
+        <Separator className="my-8 bg-gradient-to-r from-emerald-200 to-blue-200 h-1 print:hidden" />
 
         {/* قسم المهام والإحصائيات */}
-        <div className="space-y-6">
+        <div className="space-y-6 print:hidden task-section">
           {/* إحصائيات المهام */}
-          <TaskStats 
-            totalTasks={taskCounts.all}
-            completedTasks={taskCounts.completed}
-            activeTasks={taskCounts.active}
-          />
+          <div className="stats-section">
+            <TaskStats 
+              totalTasks={taskCounts.all}
+              completedTasks={taskCounts.completed}
+              activeTasks={taskCounts.active}
+            />
+          </div>
 
           {/* إدخال المهام الجديدة */}
-          <TaskInput onAddTask={addTask} />
+          <div className="input-section">
+            <TaskInput onAddTask={addTask} />
+          </div>
 
           {/* قائمة المهام */}
-          <TaskList 
-            tasks={tasks}
-            onToggleTask={toggleTaskComplete}
-            onDeleteTask={deleteTask}
-          />
+          <div className="list-section">
+            <TaskList 
+              tasks={tasks}
+              onToggleTask={toggleTaskComplete}
+              onDeleteTask={deleteTask}
+            />
+          </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-16 pt-8 border-t border-gray-200">
+        <div className="text-center mt-16 pt-8 border-t border-gray-200 print:hidden">
           <p className="text-gray-500 text-sm">
             تم إنشاؤه بـ ❤️ لخدمة المسلمين - التقويم الهجري أم القرى
           </p>

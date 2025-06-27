@@ -16,7 +16,7 @@ interface CalendarViewProps {
 const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => {
   const [currentHijriDate, setCurrentHijriDate] = useState(() => getCurrentHijriDate());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
-  const [showPrintView, setShowPrintView] = useState(false);
+  const [isPrintMode, setIsPrintMode] = useState(false);
 
   useEffect(() => {
     const days = generateHijriCalendarMonth(currentHijriDate.year, currentHijriDate.month);
@@ -62,22 +62,26 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
   };
 
   const handlePrint = () => {
-    setShowPrintView(true);
+    setIsPrintMode(true);
+    // Wait for the component to render, then print
     setTimeout(() => {
       window.print();
-      setShowPrintView(false);
+      // Reset print mode after printing
+      setTimeout(() => {
+        setIsPrintMode(false);
+      }, 1000);
     }, 100);
   };
 
   return (
     <div className="w-full">
-      <CalendarHeader 
-        currentHijriDate={currentHijriDate}
-        onNavigateMonth={navigateHijriMonth}
-        onPrint={handlePrint}
-      />
-      
       <div className="print:hidden">
+        <CalendarHeader 
+          currentHijriDate={currentHijriDate}
+          onNavigateMonth={navigateHijriMonth}
+          onPrint={handlePrint}
+        />
+        
         <CalendarGrid 
           calendarDays={calendarDays}
           onAddTask={onAddTask}
@@ -85,13 +89,14 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
         />
       </div>
 
-      {showPrintView && (
+      {/* Always render the printable calendar, but only show it during print */}
+      <div className={isPrintMode ? '' : 'hidden'}>
         <PrintableCalendar 
           tasks={tasks}
           startYear={currentHijriDate.year}
           startMonth={currentHijriDate.month}
         />
-      )}
+      </div>
     </div>
   );
 };
