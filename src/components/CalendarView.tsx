@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { CalendarDay, CalendarEvent } from '@/types/calendar';
 import { Task } from '@/types/task';
 import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getCurrentHijriDate } from '@/utils/hijriCalendar';
 import CalendarHeader from '@/components/CalendarHeader';
 import CalendarGrid from '@/components/CalendarGrid';
-import PrintableCalendar from '@/components/PrintableCalendar';
+import YearlyPrintableCalendar from '@/components/YearlyPrintableCalendar';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -75,10 +74,9 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
 
   if (isPrintMode) {
     return (
-      <PrintableCalendar 
+      <YearlyPrintableCalendar 
         tasks={tasks}
-        startYear={currentHijriDate.year}
-        startMonth={currentHijriDate.month}
+        hijriYear={currentHijriDate.year}
       />
     );
   }
