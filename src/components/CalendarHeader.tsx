@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
-import { printer } from 'lucide-react';
+import { Printer } from 'lucide-react';
 
 interface CalendarHeaderProps {
   currentHijriDate: { year: number; month: number };
@@ -38,7 +38,7 @@ const CalendarHeader = ({ currentHijriDate, onNavigateMonth, onPrint }: Calendar
                 onClick={onPrint}
                 className="hover:bg-emerald-100 text-emerald-700 border-emerald-300"
               >
-                <printer className="w-4 h-4 ml-2" />
+                <Printer className="w-4 h-4 ml-2" />
                 طباعة التقويم
               </Button>
             )}

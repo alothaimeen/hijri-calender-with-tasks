@@ -65,7 +65,8 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
 
   return (
     <div className="print-calendar hidden print:block bg-white text-black">
-      <style jsx>{`
+      <style>
+        {`
         @media print {
           @page {
             size: A4;
@@ -128,7 +129,8 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
             border-bottom: 1px solid #ccc;
           }
         }
-      `}</style>
+        `}
+      </style>
       
       <div className="text-center mb-4">
         <h1 className="text-lg font-bold">التقويم الهجري - أم القرى</h1>
