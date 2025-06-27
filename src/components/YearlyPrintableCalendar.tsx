@@ -44,15 +44,15 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     const days = generateMonthData(hijriYear, monthIndex);
     
     return (
-      <div className="month-container">
+      <div key={`month-${monthIndex}`} className="month-container">
         <div className="month-header">
           <h3>{hijriMonths[monthIndex]} {hijriYear} هـ</h3>
         </div>
         
         <div className="calendar-grid">
           {/* Day headers */}
-          {dayHeaders.map(day => (
-            <div key={day} className="day-header">
+          {dayHeaders.map((day, index) => (
+            <div key={`header-${monthIndex}-${index}`} className="day-header">
               {day}
             </div>
           ))}
@@ -60,7 +60,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
           {/* Calendar days */}
           {days.map((day, index) => (
             <div
-              key={index}
+              key={`day-${monthIndex}-${index}`}
               className={`day-cell ${!day.isCurrentMonth ? 'other-month' : ''} ${
                 day.isToday ? 'today' : ''
               }`}
@@ -71,9 +71,9 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
               </div>
               
               <div className="events-container">
-                {day.events.slice(0, 2).map(event => (
+                {day.events.slice(0, 2).map((event, eventIndex) => (
                   <div
-                    key={event.id}
+                    key={`event-${monthIndex}-${index}-${eventIndex}`}
                     className={`event-item ${
                       event.type === 'occasion' ? 'occasion' : 
                       event.completed ? 'task-completed' : 'task'
@@ -98,16 +98,20 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
   };
 
   const renderPage = (startMonth: number, pageNumber: number) => (
-    <div key={pageNumber} className="print-page">
+    <div key={`page-${pageNumber}`} className="print-page">
       <div className="page-header">
         <h1>التقويم الهجري {hijriYear} هـ</h1>
         <h2>
-          {hijriMonths[startMonth]} - {hijriMonths[startMonth + 3]} {hijriYear} هـ
+          {hijriMonths[startMonth]} - {hijriMonths[Math.min(startMonth + 3, 11)]} {hijriYear} هـ
         </h2>
       </div>
       
       <div className="months-grid">
-        {[0, 1, 2, 3].map(offset => renderMonth(startMonth + offset))}
+        {[0, 1, 2, 3].map(offset => {
+          const monthIndex = startMonth + offset;
+          if (monthIndex > 11) return null;
+          return renderMonth(monthIndex);
+        })}
       </div>
       
       <div className="page-footer">
@@ -131,6 +135,8 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
           color: #000;
           background: white;
           direction: rtl;
+          width: 100%;
+          height: 100vh;
         }
         
         .print-page {
@@ -138,6 +144,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
           height: 100vh;
           display: flex;
           flex-direction: column;
+          padding: 0.5cm;
         }
         
         .print-page:last-child {
