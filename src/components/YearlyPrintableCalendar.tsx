@@ -44,37 +44,35 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     const days = generateMonthData(hijriYear, monthIndex);
     
     return (
-      <div key={monthIndex} style={{ marginBottom: '1cm' }}>
-        <div className="month-grid">
-          <div className="month-header">
-            {hijriMonths[monthIndex]} {hijriYear} هـ
-          </div>
-          
-          {dayHeaders.map((day, index) => (
-            <div key={index} className="day-header">{day}</div>
-          ))}
-          
-          {days.map((day, index) => (
-            <div key={index} className="calendar-day">
-              <div style={{ fontWeight: 'bold', marginBottom: '0.2cm' }}>
-                {day.hijriDate.hijriDay}
-              </div>
-              <div style={{ fontSize: '10px', color: '#666' }}>
-                {day.hijriDate.gregorianDate.getDate()}
-              </div>
-              {day.events.slice(0, 2).map((event, eventIndex) => (
-                <div key={eventIndex} style={{
-                  fontSize: '8px',
-                  margin: '0.1cm 0',
-                  padding: '0.05cm',
-                  background: event.type === 'occasion' ? '#ffffcc' : '#e6f3ff'
-                }}>
-                  {event.title.substring(0, 15)}
-                </div>
-              ))}
-            </div>
-          ))}
+      <div key={`month-${monthIndex}`} className="month-container">
+        <div className="month-header">
+          {hijriMonths[monthIndex]} {hijriYear} هـ
         </div>
+        
+        {dayHeaders.map((day, index) => (
+          <div key={`header-${index}`} className="day-header">{day}</div>
+        ))}
+        
+        {days.map((day, index) => (
+          <div key={`day-${monthIndex}-${index}`} className="calendar-day">
+            <div>
+              {day.hijriDate.hijriDay}
+            </div>
+            <div>
+              {day.hijriDate.gregorianDate.getDate()}
+            </div>
+            {day.events.slice(0, 2).map((event, eventIndex) => (
+              <div 
+                key={`event-${monthIndex}-${index}-${eventIndex}`} 
+                style={{
+                  background: event.type === 'occasion' ? '#ffffcc' : '#e6f3ff'
+                }}
+              >
+                {event.title.substring(0, 15)}
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     );
   };
@@ -82,13 +80,8 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
   return (
     <div className="yearly-print-calendar">
       <div className="print-page">
-        <div style={{ textAlign: 'center', marginBottom: '1cm' }}>
-          <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            التقويم الهجري {hijriYear} هـ
-          </h1>
-        </div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1cm' }}>
+        <h1>التقويم الهجري {hijriYear} هـ</h1>
+        <div className="month-grid">
           {renderMonth(0)}
           {renderMonth(1)}
           {renderMonth(2)}
@@ -97,7 +90,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
       </div>
       
       <div className="print-page">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1cm' }}>
+        <div className="month-grid">
           {renderMonth(4)}
           {renderMonth(5)}
           {renderMonth(6)}
@@ -106,7 +99,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
       </div>
       
       <div className="print-page">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1cm' }}>
+        <div className="month-grid">
           {renderMonth(8)}
           {renderMonth(9)}
           {renderMonth(10)}
