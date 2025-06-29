@@ -1,15 +1,18 @@
-
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Task } from '@/types/task';
 import TaskInput from '@/components/TaskInput';
 import CalendarView from '@/components/CalendarView';
 import TaskStats from '@/components/TaskStats';
 import TaskList from '@/components/TaskList';
 import { Separator } from '@/components/ui/separator';
-import { Calendar, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Calendar, Sparkles, Printer } from 'lucide-react';
+import { getCurrentHijriDate } from '@/utils/hijriCalendar';
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const navigate = useNavigate();
 
   // تحميل المهام من التخزين المحلي عند بدء التطبيق
   useEffect(() => {
@@ -53,6 +56,16 @@ const Index = () => {
     all: tasks.length,
     active: tasks.filter(task => !task.completed).length,
     completed: tasks.filter(task => task.completed).length,
+  };
+
+  const handleGoToPrintPage = () => {
+    const currentHijriDate = getCurrentHijriDate();
+    navigate('/print', {
+      state: {
+        tasks: tasks,
+        hijriYear: currentHijriDate.year
+      }
+    });
   };
 
   return (
@@ -105,6 +118,18 @@ const Index = () => {
               onDeleteTask={deleteTask}
             />
           </div>
+        </div>
+
+        {/* زر الطباعة */}
+        <div className="text-center mt-8 print:hidden">
+          <Button
+            onClick={handleGoToPrintPage}
+            className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white shadow-lg px-8 py-3 text-lg"
+            size="lg"
+          >
+            <Printer className="w-5 h-5 ml-2" />
+            عرض صفحة الطباعة السنوية
+          </Button>
         </div>
 
         {/* Footer */}

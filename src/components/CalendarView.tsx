@@ -1,10 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import { CalendarDay, CalendarEvent } from '@/types/calendar';
 import { Task } from '@/types/task';
 import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getCurrentHijriDate } from '@/utils/hijriCalendar';
 import CalendarHeader from '@/components/CalendarHeader';
 import CalendarGrid from '@/components/CalendarGrid';
-import YearlyPrintableCalendar from '@/components/YearlyPrintableCalendar';
 
 interface CalendarViewProps {
   tasks: Task[];
@@ -15,7 +15,6 @@ interface CalendarViewProps {
 const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => {
   const [currentHijriDate, setCurrentHijriDate] = useState(() => getCurrentHijriDate());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
-  const [isPrintMode, setIsPrintMode] = useState(false);
 
   useEffect(() => {
     const days = generateHijriCalendarMonth(currentHijriDate.year, currentHijriDate.month);
@@ -60,33 +59,11 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
     });
   };
 
-  const handlePrint = () => {
-    setIsPrintMode(true);
-    // Wait for the component to render, then print
-    setTimeout(() => {
-      window.print();
-      // Reset print mode after printing
-      setTimeout(() => {
-        setIsPrintMode(false);
-      }, 1000);
-    }, 100);
-  };
-
-  if (isPrintMode) {
-    return (
-      <YearlyPrintableCalendar 
-        tasks={tasks}
-        hijriYear={currentHijriDate.year}
-      />
-    );
-  }
-
   return (
     <div className="w-full">
       <CalendarHeader 
         currentHijriDate={currentHijriDate}
         onNavigateMonth={navigateHijriMonth}
-        onPrint={handlePrint}
       />
       
       <CalendarGrid 

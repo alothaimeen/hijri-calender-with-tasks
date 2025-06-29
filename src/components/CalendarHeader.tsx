@@ -3,15 +3,13 @@ import React from 'react';
 import { Card, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
-import { Printer } from 'lucide-react';
 
 interface CalendarHeaderProps {
   currentHijriDate: { year: number; month: number };
   onNavigateMonth: (direction: 'prev' | 'next') => void;
-  onPrint?: () => void;
 }
 
-const CalendarHeader = ({ currentHijriDate, onNavigateMonth, onPrint }: CalendarHeaderProps) => {
+const CalendarHeader = ({ currentHijriDate, onNavigateMonth }: CalendarHeaderProps) => {
   const hijriMonths = [
     'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 'جمادى الأولى', 'جمادى الثانية',
     'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
@@ -30,18 +28,6 @@ const CalendarHeader = ({ currentHijriDate, onNavigateMonth, onPrint }: Calendar
             >
               <ChevronLeft className="w-5 h-5" />
             </Button>
-            
-            {onPrint && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onPrint}
-                className="hover:bg-emerald-100 text-emerald-700 border-emerald-300"
-              >
-                <Printer className="w-4 h-4 ml-2" />
-                طباعة التقويم
-              </Button>
-            )}
           </div>
           
           <div className="text-center">
