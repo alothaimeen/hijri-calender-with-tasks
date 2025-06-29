@@ -110,48 +110,46 @@
     margin: 0.5cm;
   }
   
-  * {
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
   
-  body {
-    background: white !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-  
   /* Hide everything except the yearly print calendar */
-  body > * {
+  body > div:not([class*="yearly-print-calendar"]) {
     display: none !important;
   }
   
-  /* Show only the yearly printable calendar during print */
+  /* Show the yearly printable calendar during print */
   .yearly-print-calendar {
     display: block !important;
     visibility: visible !important;
     position: static !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
     background: white !important;
     color: black !important;
     margin: 0 !important;
     padding: 0 !important;
   }
   
-  .yearly-print-calendar,
+  /* Ensure all child elements are visible */
   .yearly-print-calendar * {
     visibility: visible !important;
-    background: white !important;
+    color: inherit !important;
   }
   
-  /* Ensure print layout is correct */
+  /* Print page breaks */
   .yearly-print-calendar .print-page {
     display: flex !important;
     flex-direction: column !important;
     height: 100vh !important;
     page-break-after: always !important;
+    page-break-inside: avoid !important;
   }
   
   .yearly-print-calendar .print-page:last-child {

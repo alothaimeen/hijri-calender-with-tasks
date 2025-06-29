@@ -44,15 +44,39 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     const days = generateMonthData(hijriYear, monthIndex);
     
     return (
-      <div key={`month-${monthIndex}`} className="month-container">
-        <div className="month-header">
-          <h3>{hijriMonths[monthIndex]} {hijriYear} هـ</h3>
+      <div key={`month-${monthIndex}`} style={{ 
+        border: '2px solid #2D5A27',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        background: 'white'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #2D5A27, #3A6B32)',
+          color: 'white',
+          textAlign: 'center',
+          padding: '0.3cm',
+          margin: 0
+        }}>
+          <h3 style={{ margin: 0, fontSize: '14px', fontWeight: 'bold' }}>
+            {hijriMonths[monthIndex]} {hijriYear} هـ
+          </h3>
         </div>
         
-        <div className="calendar-grid">
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(7, 1fr)'
+        }}>
           {/* Day headers */}
           {dayHeaders.map((day, index) => (
-            <div key={`header-${monthIndex}-${index}`} className="day-header">
+            <div key={`header-${monthIndex}-${index}`} style={{
+              background: '#F0F8F0',
+              border: '1px solid #DDD',
+              textAlign: 'center',
+              padding: '0.2cm',
+              fontWeight: 'bold',
+              fontSize: '10px',
+              color: '#2D5A27'
+            }}>
               {day}
             </div>
           ))}
@@ -61,23 +85,56 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
           {days.map((day, index) => (
             <div
               key={`day-${monthIndex}-${index}`}
-              className={`day-cell ${!day.isCurrentMonth ? 'other-month' : ''} ${
-                day.isToday ? 'today' : ''
-              }`}
+              style={{
+                border: '1px solid #DDD',
+                minHeight: '2.2cm',
+                padding: '0.1cm',
+                position: 'relative',
+                background: !day.isCurrentMonth ? '#F8F8F8' : day.isToday ? '#FFF9C4' : 'white',
+                opacity: !day.isCurrentMonth ? 0.6 : 1
+              }}
             >
-              <div className="day-number">
-                <span className="hijri-day">{day.hijriDate.hijriDay}</span>
-                <span className="gregorian-day">{day.hijriDate.gregorianDate.getDate()}</span>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '0.1cm'
+              }}>
+                <span style={{
+                  fontWeight: 'bold',
+                  fontSize: '11px',
+                  color: '#2D5A27'
+                }}>
+                  {day.hijriDate.hijriDay}
+                </span>
+                <span style={{
+                  fontSize: '8px',
+                  color: '#666'
+                }}>
+                  {day.hijriDate.gregorianDate.getDate()}
+                </span>
               </div>
               
-              <div className="events-container">
+              <div style={{ flex: 1 }}>
                 {day.events.slice(0, 2).map((event, eventIndex) => (
                   <div
                     key={`event-${monthIndex}-${index}-${eventIndex}`}
-                    className={`event-item ${
-                      event.type === 'occasion' ? 'occasion' : 
-                      event.completed ? 'task-completed' : 'task'
-                    }`}
+                    style={{
+                      fontSize: '7px',
+                      margin: '0.05cm 0',
+                      padding: '0.05cm',
+                      borderRadius: '2px',
+                      lineHeight: 1.2,
+                      background: event.type === 'occasion' ? '#FFF3CD' : 
+                                 event.completed ? '#E8F5E8' : '#E3F2FD',
+                      borderLeft: `2px solid ${
+                        event.type === 'occasion' ? '#F57C00' : 
+                        event.completed ? '#388E3C' : '#1976D2'
+                      }`,
+                      fontWeight: event.type === 'occasion' ? 'bold' : 'normal',
+                      textDecoration: event.completed ? 'line-through' : 'none',
+                      opacity: event.completed ? 0.7 : 1
+                    }}
                   >
                     {event.title.length > 12 
                       ? event.title.substring(0, 12) + '...' 
@@ -85,11 +142,24 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
                   </div>
                 ))}
                 {day.events.length > 2 && (
-                  <div className="more-events">+{day.events.length - 2}</div>
+                  <div style={{
+                    fontSize: '6px',
+                    color: '#666',
+                    textAlign: 'center'
+                  }}>
+                    +{day.events.length - 2}
+                  </div>
                 )}
               </div>
               
-              <div className="manual-space"></div>
+              <div style={{
+                position: 'absolute',
+                bottom: '0.1cm',
+                left: '0.1cm',
+                right: '0.1cm',
+                height: '0.3cm',
+                borderBottom: '1px solid #CCC'
+              }}></div>
             </div>
           ))}
         </div>
@@ -98,15 +168,42 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
   };
 
   const renderPage = (startMonth: number, pageNumber: number) => (
-    <div key={`page-${pageNumber}`} className="print-page">
-      <div className="page-header">
-        <h1>التقويم الهجري {hijriYear} هـ</h1>
-        <h2>
+    <div key={`page-${pageNumber}`} className="print-page" style={{
+      pageBreakAfter: pageNumber < 3 ? 'always' : 'avoid',
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      padding: '0.5cm'
+    }}>
+      <div style={{
+        textAlign: 'center',
+        marginBottom: '1cm',
+        borderBottom: '3px solid #2D5A27',
+        paddingBottom: '0.5cm'
+      }}>
+        <h1 style={{
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#2D5A27',
+          margin: '0 0 0.3cm 0'
+        }}>
+          التقويم الهجري {hijriYear} هـ
+        </h1>
+        <h2 style={{
+          fontSize: '16px',
+          color: '#555',
+          margin: 0
+        }}>
           {hijriMonths[startMonth]} - {hijriMonths[Math.min(startMonth + 3, 11)]} {hijriYear} هـ
         </h2>
       </div>
       
-      <div className="months-grid">
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: '0.8cm',
+        flex: 1
+      }}>
         {[0, 1, 2, 3].map(offset => {
           const monthIndex = startMonth + offset;
           if (monthIndex > 11) return null;
@@ -114,201 +211,29 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
         })}
       </div>
       
-      <div className="page-footer">
-        <p>الخط في أسفل كل يوم مخصص للمهام اليدوية</p>
-        <p>صفحة {pageNumber} من 3</p>
+      <div style={{
+        textAlign: 'center',
+        marginTop: '0.5cm',
+        paddingTop: '0.3cm',
+        borderTop: '1px solid #DDD',
+        fontSize: '10px',
+        color: '#666'
+      }}>
+        <p style={{ margin: '0.1cm 0' }}>الخط في أسفل كل يوم مخصص للمهام اليدوية</p>
+        <p style={{ margin: '0.1cm 0' }}>صفحة {pageNumber} من 3</p>
       </div>
     </div>
   );
 
   return (
-    <div className="yearly-print-calendar">
-      <style>
-        {`
-        @page {
-          size: A4 landscape;
-          margin: 1cm;
-        }
-        
-        .yearly-print-calendar {
-          font-family: 'Arial', sans-serif;
-          color: #000;
-          background: white;
-          direction: rtl;
-          width: 100%;
-          height: 100vh;
-        }
-        
-        .print-page {
-          page-break-after: always;
-          height: 100vh;
-          display: flex;
-          flex-direction: column;
-          padding: 0.5cm;
-        }
-        
-        .print-page:last-child {
-          page-break-after: avoid;
-        }
-        
-        .page-header {
-          text-align: center;
-          margin-bottom: 1cm;
-          border-bottom: 3px solid #2D5A27;
-          padding-bottom: 0.5cm;
-        }
-        
-        .page-header h1 {
-          font-size: 24px;
-          font-weight: bold;
-          color: #2D5A27;
-          margin: 0 0 0.3cm 0;
-        }
-        
-        .page-header h2 {
-          font-size: 16px;
-          color: #555;
-          margin: 0;
-        }
-        
-        .months-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 0.8cm;
-          flex: 1;
-        }
-        
-        .month-container {
-          border: 2px solid #2D5A27;
-          border-radius: 8px;
-          overflow: hidden;
-          background: white;
-        }
-        
-        .month-header {
-          background: linear-gradient(135deg, #2D5A27, #3A6B32);
-          color: white;
-          text-align: center;
-          padding: 0.3cm;
-        }
-        
-        .month-header h3 {
-          margin: 0;
-          font-size: 14px;
-          font-weight: bold;
-        }
-        
-        .calendar-grid {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-        }
-        
-        .day-header {
-          background: #F0F8F0;
-          border: 1px solid #DDD;
-          text-align: center;
-          padding: 0.2cm;
-          font-weight: bold;
-          font-size: 10px;
-          color: #2D5A27;
-        }
-        
-        .day-cell {
-          border: 1px solid #DDD;
-          min-height: 2.2cm;
-          padding: 0.1cm;
-          position: relative;
-          background: white;
-        }
-        
-        .day-cell.other-month {
-          background: #F8F8F8;
-          opacity: 0.6;
-        }
-        
-        .day-cell.today {
-          background: #FFF9C4;
-          border: 2px solid #F57C00;
-        }
-        
-        .day-number {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 0.1cm;
-        }
-        
-        .hijri-day {
-          font-weight: bold;
-          font-size: 11px;
-          color: #2D5A27;
-        }
-        
-        .gregorian-day {
-          font-size: 8px;
-          color: #666;
-        }
-        
-        .events-container {
-          flex: 1;
-        }
-        
-        .event-item {
-          font-size: 7px;
-          margin: 0.05cm 0;
-          padding: 0.05cm;
-          border-radius: 2px;
-          line-height: 1.2;
-        }
-        
-        .event-item.occasion {
-          background: #FFF3CD;
-          border-left: 2px solid #F57C00;
-          font-weight: bold;
-        }
-        
-        .event-item.task {
-          background: #E3F2FD;
-          border-left: 2px solid #1976D2;
-        }
-        
-        .event-item.task-completed {
-          background: #E8F5E8;
-          border-left: 2px solid #388E3C;
-          text-decoration: line-through;
-          opacity: 0.7;
-        }
-        
-        .more-events {
-          font-size: 6px;
-          color: #666;
-          text-align: center;
-        }
-        
-        .manual-space {
-          position: absolute;
-          bottom: 0.1cm;
-          left: 0.1cm;
-          right: 0.1cm;
-          height: 0.3cm;
-          border-bottom: 1px solid #CCC;
-        }
-        
-        .page-footer {
-          text-align: center;
-          margin-top: 0.5cm;
-          padding-top: 0.3cm;
-          border-top: 1px solid #DDD;
-          font-size: 10px;
-          color: #666;
-        }
-        
-        .page-footer p {
-          margin: 0.1cm 0;
-        }
-        `}
-      </style>
-      
+    <div className="yearly-print-calendar" style={{
+      fontFamily: 'Arial, sans-serif',
+      color: '#000',
+      background: 'white',
+      direction: 'rtl',
+      width: '100%',
+      height: '100vh'
+    }}>
       {/* الصفحة الأولى: محرم - ربيع الثاني */}
       {renderPage(0, 1)}
       
