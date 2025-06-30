@@ -44,93 +44,68 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     const days = generateMonthData(hijriYear, monthIndex);
     
     return (
-      <div className="month-container">
-        <div className="month-header">
-          {hijriMonths[monthIndex]} {hijriYear} هـ
+      <div className="professional-month">
+        <div className="month-title">
+          <h3>{hijriMonths[monthIndex]} {hijriYear} هـ</h3>
         </div>
         
-        <div className="calendar-grid">
-          {dayHeaders.map((day, index) => (
-            <div key={`header-${monthIndex}-${index}`} className="day-header">
-              {day}
-            </div>
-          ))}
+        <div className="month-calendar">
+          <div className="weekdays">
+            {dayHeaders.map((day, index) => (
+              <div key={`header-${monthIndex}-${index}`} className="weekday">
+                {day}
+              </div>
+            ))}
+          </div>
           
-          {days.map((day, index) => (
-            <div key={`day-${monthIndex}-${index}`} className="calendar-day">
-              <div className="hijri-day">
-                {day.hijriDate.hijriDay}
+          <div className="days-grid">
+            {days.map((day, index) => (
+              <div key={`day-${monthIndex}-${index}`} className="day-cell">
+                <div className="day-numbers">
+                  <span className="hijri-number">{day.hijriDate.hijriDay}</span>
+                  <span className="gregorian-number">{day.hijriDate.gregorianDate.getDate()}</span>
+                </div>
+                <div className="day-events">
+                  {day.events.slice(0, 2).map((event, eventIndex) => (
+                    <div 
+                      key={`event-${monthIndex}-${index}-${eventIndex}`} 
+                      className={`event-dot ${event.type === 'occasion' ? 'occasion' : 'task'}`}
+                      title={event.title}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="gregorian-day">
-                {day.hijriDate.gregorianDate.getDate()}
-              </div>
-              <div className="events-container">
-                {day.events.slice(0, 2).map((event, eventIndex) => (
-                  <div 
-                    key={`event-${monthIndex}-${index}-${eventIndex}`} 
-                    className={`event-item ${
-                      event.type === 'occasion' 
-                        ? 'occasion-event' 
-                        : 'task-event'
-                    }`}
-                  >
-                    {event.title.length > 12 ? event.title.substring(0, 12) + '...' : event.title}
-                  </div>
-                ))}
-                {day.events.length > 2 && (
-                  <div className="more-events">
-                    +{day.events.length - 2}
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="yearly-print-calendar" dir="rtl">
-      {/* العنوان الرئيسي */}
-      <div className="main-title">
-        <h1>التقويم الهجري {hijriYear} هـ</h1>
-        <p>تقويم أم القرى الشريف</p>
-      </div>
-      
-      {/* الصفحة الأولى - الأشهر 1-4 */}
-      <div className="print-page page-1">
-        <div className="months-grid">
-          {renderMonth(0)}
-          {renderMonth(1)}
-          {renderMonth(2)}
-          {renderMonth(3)}
+    <div className="professional-calendar">
+      {/* Header */}
+      <div className="calendar-header">
+        <div className="header-content">
+          <h1>التقويم الهجري {hijriYear} هـ</h1>
+          <div className="header-subtitle">
+            <p>تقويم أم القرى الشريف</p>
+            <div className="header-ornament"></div>
+          </div>
         </div>
       </div>
-      
-      {/* الصفحة الثانية - الأشهر 5-8 */}
-      <div className="print-page page-2">
-        <div className="months-grid">
-          {renderMonth(4)}
-          {renderMonth(5)}
-          {renderMonth(6)}
-          {renderMonth(7)}
+
+      {/* Calendar Grid */}
+      <div className="calendar-content">
+        <div className="months-container">
+          {Array.from({ length: 12 }, (_, i) => renderMonth(i))}
         </div>
       </div>
-      
-      {/* الصفحة الثالثة - الأشهر 9-12 */}
-      <div className="print-page page-3">
-        <div className="months-grid">
-          {renderMonth(8)}
-          {renderMonth(9)}
-          {renderMonth(10)}
-          {renderMonth(11)}
-        </div>
-      </div>
-      
-      {/* تذييل */}
-      <div className="footer">
-        <p>طُبع من التقويم الهجري الإلكتروني - {new Date().getFullYear()}</p>
+
+      {/* Footer */}
+      <div className="calendar-footer">
+        <div className="footer-ornament"></div>
+        <p>تم إنشاؤه بعناية - التقويم الهجري الإلكتروني {new Date().getFullYear()}</p>
       </div>
     </div>
   );
