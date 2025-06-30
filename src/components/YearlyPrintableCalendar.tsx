@@ -92,62 +92,6 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
 
   return (
     <div className="yearly-print-calendar w-full bg-white text-black" dir="rtl">
-      <style jsx>{`
-        @media print {
-          .yearly-print-calendar {
-            width: 100% !important;
-            background: white !important;
-            color: black !important;
-            font-family: Arial, sans-serif !important;
-          }
-          
-          .print-page {
-            width: 100vw !important;
-            height: 100vh !important;
-            page-break-after: always !important;
-            padding: 1cm !important;
-            margin: 0 !important;
-          }
-          
-          .print-page:last-child {
-            page-break-after: avoid !important;
-          }
-          
-          .month-grid {
-            display: grid !important;
-            grid-template-columns: 1fr 1fr !important;
-            gap: 0.5cm !important;
-            width: 100% !important;
-          }
-          
-          .month-container {
-            display: block !important;
-            border: 2px solid black !important;
-            background: white !important;
-            page-break-inside: avoid !important;
-          }
-          
-          .calendar-grid {
-            display: grid !important;
-            grid-template-columns: repeat(7, 1fr) !important;
-            gap: 0 !important;
-          }
-          
-          .calendar-day {
-            min-height: 2cm !important;
-            border: 1px solid #666 !important;
-            padding: 2px !important;
-            background: white !important;
-          }
-          
-          .event-item {
-            font-size: 6px !important;
-            padding: 1px !important;
-            margin: 1px 0 !important;
-          }
-        }
-      `}</style>
-      
       {/* الصفحة الأولى */}
       <div className="print-page">
         <h1 className="text-center text-2xl font-bold mb-6">التقويم الهجري {hijriYear} هـ</h1>
