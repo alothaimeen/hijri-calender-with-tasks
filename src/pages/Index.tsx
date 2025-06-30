@@ -83,6 +83,18 @@ const Index = () => {
           <p className="text-gray-600 text-xl font-medium">
             تقويم أم القرى - نظم مهامك ومناسباتك الإسلامية
           </p>
+          
+          {/* زر الطباعة محسن ومرئي */}
+          <div className="mt-6">
+            <Button
+              onClick={handleGoToPrintPage}
+              className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white shadow-xl px-8 py-4 text-xl rounded-xl transform hover:scale-105 transition-all duration-200"
+              size="lg"
+            >
+              <Printer className="w-6 h-6 ml-3" />
+              طباعة التقويم السنوي
+            </Button>
+          </div>
         </div>
 
         {/* التقويم الهجري - العنصر الأساسي */}
@@ -118,18 +130,6 @@ const Index = () => {
               onDeleteTask={deleteTask}
             />
           </div>
-        </div>
-
-        {/* زر الطباعة */}
-        <div className="text-center mt-8 print:hidden">
-          <Button
-            onClick={handleGoToPrintPage}
-            className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:from-emerald-700 hover:to-blue-700 text-white shadow-lg px-8 py-3 text-lg"
-            size="lg"
-          >
-            <Printer className="w-5 h-5 ml-2" />
-            عرض صفحة الطباعة السنوية
-          </Button>
         </div>
 
         {/* Footer */}
