@@ -103,185 +103,206 @@
   }
 }
 
-/* Professional Print Calendar Styles */
-.professional-calendar {
+/* تصميم التقويم السنوي المطبوع */
+.yearly-calendar {
   width: 100%;
   background: white;
   color: #1a1a1a;
   direction: rtl;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.calendar-page {
+  width: 100%;
+  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
-.calendar-header {
+.page-header {
   text-align: center;
-  margin-bottom: 30px;
-  padding: 20px 0;
-  border-bottom: 3px solid #2d5a4f;
-  position: relative;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
 }
 
-.header-content h1 {
-  font-size: 2.5rem;
+.page-header h1 {
+  font-size: 2.2rem;
   font-weight: 700;
   color: #2d5a4f;
-  margin: 0 0 10px 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 0 0 8px 0;
 }
 
-.header-subtitle p {
-  font-size: 1.2rem;
+.subtitle {
+  font-size: 1.1rem;
   color: #666;
-  margin: 0;
+  margin: 0 0 15px 0;
 }
 
-.header-ornament {
-  width: 80px;
+.header-divider {
+  width: 100px;
   height: 3px;
   background: linear-gradient(90deg, #2d5a4f, #4a9d8e, #2d5a4f);
-  margin: 15px auto;
+  margin: 0 auto;
   border-radius: 2px;
 }
 
-.calendar-content {
-  margin: 20px 0;
-}
-
-.months-container {
+.months-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  gap: 25px;
-  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 20px;
+  flex: 1;
 }
 
-.professional-month {
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
+.calendar-month {
+  border: 2px solid #2d5a4f;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   background: white;
+  display: flex;
+  flex-direction: column;
 }
 
-.month-title {
+.month-header {
   background: linear-gradient(135deg, #2d5a4f, #4a9d8e);
   color: white;
   text-align: center;
   padding: 12px;
-  font-weight: 600;
-  font-size: 1.1rem;
 }
 
-.month-title h3 {
+.month-header h3 {
   margin: 0;
   font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.month-calendar {
+.month-grid {
   padding: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.weekdays {
+.weekdays-row {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
   margin-bottom: 5px;
 }
 
-.weekday {
+.weekday-cell {
   background: #f8f9fa;
   text-align: center;
-  padding: 8px 4px;
+  padding: 6px 4px;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #2d5a4f;
-  border: 1px solid #e9ecef;
+  border: 1px solid #2d5a4f;
 }
 
-.days-grid {
+.days-container {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1px;
+  flex: 1;
 }
 
-.day-cell {
-  border: 1px solid #e9ecef;
-  padding: 6px 4px;
-  min-height: 45px;
+.day-box {
+  border: 1px solid #2d5a4f;
+  padding: 4px;
   background: white;
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 80px;
 }
 
-.day-numbers {
+.day-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2px;
+  align-items: center;
+  margin-bottom: 3px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #e9ecef;
 }
 
-.hijri-number {
+.hijri-date {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #2d5a4f;
 }
 
-.gregorian-number {
-  font-size: 0.7rem;
-  color: #999;
+.gregorian-date {
+  font-size: 0.65rem;
+  color: #666;
 }
 
-.day-events {
+.day-content {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   gap: 2px;
-  flex-wrap: wrap;
-  margin-top: auto;
 }
 
-.event-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.6rem;
+  line-height: 1.2;
+}
+
+.task-item.occasion {
+  color: #f59e0b;
+}
+
+.task-item.task {
+  color: #3b82f6;
+}
+
+.task-bullet {
+  font-weight: bold;
   flex-shrink: 0;
 }
 
-.event-dot.occasion {
-  background: #f59e0b;
+.task-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.event-dot.task {
-  background: #3b82f6;
+.empty-task-line {
+  height: 8px;
+  border-bottom: 1px solid #e9ecef;
+  margin: 1px 0;
 }
 
-.calendar-footer {
+.page-footer {
   text-align: center;
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 2px solid #e0e0e0;
+  margin-top: 20px;
+  padding-top: 15px;
 }
 
-.footer-ornament {
-  width: 60px;
+.footer-divider {
+  width: 80px;
   height: 2px;
   background: linear-gradient(90deg, #2d5a4f, #4a9d8e, #2d5a4f);
-  margin: 0 auto 15px;
+  margin: 0 auto 10px;
   border-radius: 1px;
 }
 
-.calendar-footer p {
+.page-footer p {
   color: #666;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin: 0;
 }
 
-/* Print Styles */
+/* أنماط الطباعة */
 @media print {
   @page {
-    size: A4 landscape;
-    margin: 0.5cm;
+    size: A4 portrait;
+    margin: 1cm;
   }
   
   body {
@@ -293,94 +314,97 @@
     print-color-adjust: exact !important;
   }
   
-  .professional-calendar {
+  .yearly-calendar {
     display: block !important;
     width: 100% !important;
     background: white !important;
-    color: #1a1a1a !important;
-    direction: rtl !important;
-    padding: 10px !important;
-    page-break-inside: avoid !important;
   }
   
-  .calendar-header {
-    text-align: center !important;
-    margin-bottom: 20px !important;
-    padding: 15px 0 !important;
-    border-bottom: 3px solid #2d5a4f !important;
+  .calendar-page {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 15px !important;
+    page-break-after: always !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .calendar-page:last-child {
     page-break-after: avoid !important;
   }
   
-  .header-content h1 {
+  .page-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 15px !important;
+  }
+  
+  .page-header h1 {
     font-size: 1.8rem !important;
     font-weight: 700 !important;
     color: #2d5a4f !important;
-    margin: 0 0 8px 0 !important;
-    text-shadow: none !important;
+    margin: 0 0 6px 0 !important;
   }
   
-  .header-subtitle p {
-    font-size: 1rem !important;
+  .subtitle {
+    font-size: 0.95rem !important;
     color: #666 !important;
-    margin: 0 !important;
+    margin: 0 0 12px 0 !important;
   }
   
-  .header-ornament {
-    width: 60px !important;
+  .header-divider {
+    width: 80px !important;
     height: 2px !important;
     background: #2d5a4f !important;
-    margin: 10px auto !important;
-    border-radius: 1px !important;
+    margin: 0 auto !important;
   }
   
-  .calendar-content {
-    margin: 15px 0 !important;
-  }
-  
-  .months-container {
+  .months-grid {
     display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    grid-template-rows: repeat(4, 1fr) !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
     gap: 15px !important;
-    width: 100% !important;
-    page-break-inside: avoid !important;
+    flex: 1 !important;
   }
   
-  .professional-month {
+  .calendar-month {
     border: 2px solid #2d5a4f !important;
     border-radius: 8px !important;
     overflow: hidden !important;
     background: white !important;
-    page-break-inside: avoid !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   
-  .month-title {
+  .month-header {
     background: #2d5a4f !important;
     color: white !important;
     text-align: center !important;
-    padding: 8px !important;
-    font-weight: 600 !important;
-    font-size: 0.9rem !important;
+    padding: 10px !important;
   }
   
-  .month-title h3 {
+  .month-header h3 {
     margin: 0 !important;
-    font-size: 0.9rem !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
     color: white !important;
   }
   
-  .month-calendar {
+  .month-grid {
     padding: 6px !important;
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   
-  .weekdays {
+  .weekdays-row {
     display: grid !important;
     grid-template-columns: repeat(7, 1fr) !important;
     gap: 1px !important;
     margin-bottom: 3px !important;
   }
   
-  .weekday {
+  .weekday-cell {
     background: #f8f9fa !important;
     text-align: center !important;
     padding: 4px 2px !important;
@@ -390,80 +414,96 @@
     border: 1px solid #2d5a4f !important;
   }
   
-  .days-grid {
+  .days-container {
     display: grid !important;
     grid-template-columns: repeat(7, 1fr) !important;
     gap: 1px !important;
+    flex: 1 !important;
   }
   
-  .day-cell {
+  .day-box {
     border: 1px solid #2d5a4f !important;
-    padding: 3px 2px !important;
-    min-height: 30px !important;
+    padding: 3px !important;
     background: white !important;
-    position: relative !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    min-height: 65px !important;
   }
   
-  .day-numbers {
+  .day-header {
     display: flex !important;
     justify-content: space-between !important;
-    align-items: flex-start !important;
-    margin-bottom: 1px !important;
+    align-items: center !important;
+    margin-bottom: 2px !important;
+    padding-bottom: 1px !important;
+    border-bottom: 1px solid #e9ecef !important;
   }
   
-  .hijri-number {
+  .hijri-date {
     font-weight: 700 !important;
     font-size: 0.7rem !important;
     color: #2d5a4f !important;
   }
   
-  .gregorian-number {
+  .gregorian-date {
     font-size: 0.55rem !important;
     color: #666 !important;
   }
   
-  .day-events {
+  .day-content {
+    flex: 1 !important;
     display: flex !important;
+    flex-direction: column !important;
     gap: 1px !important;
-    flex-wrap: wrap !important;
-    margin-top: auto !important;
   }
   
-  .event-dot {
-    width: 4px !important;
-    height: 4px !important;
-    border-radius: 50% !important;
+  .task-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 2px !important;
+    font-size: 0.5rem !important;
+    line-height: 1.1 !important;
+  }
+  
+  .task-item.occasion {
+    color: #f59e0b !important;
+  }
+  
+  .task-item.task {
+    color: #3b82f6 !important;
+  }
+  
+  .task-bullet {
+    font-weight: bold !important;
     flex-shrink: 0 !important;
   }
   
-  .event-dot.occasion {
-    background: #f59e0b !important;
+  .task-text {
+    flex: 1 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
   }
   
-  .event-dot.task {
-    background: #3b82f6 !important;
+  .empty-task-line {
+    height: 6px !important;
+    border-bottom: 1px solid #e9ecef !important;
+    margin: 1px 0 !important;
   }
   
-  .calendar-footer {
+  .page-footer {
     text-align: center !important;
-    margin-top: 20px !important;
-    padding-top: 15px !important;
-    border-top: 2px solid #2d5a4f !important;
-    page-break-before: avoid !important;
+    margin-top: 15px !important;
+    padding-top: 10px !important;
   }
   
-  .footer-ornament {
-    width: 40px !important;
+  .footer-divider {
+    width: 60px !important;
     height: 2px !important;
     background: #2d5a4f !important;
-    margin: 0 auto 10px !important;
-    border-radius: 1px !important;
+    margin: 0 auto 8px !important;
   }
   
-  .calendar-footer p {
+  .page-footer p {
     color: #666 !important;
     font-size: 0.7rem !important;
     margin: 0 !important;

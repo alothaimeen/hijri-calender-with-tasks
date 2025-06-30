@@ -44,34 +44,43 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     const days = generateMonthData(hijriYear, monthIndex);
     
     return (
-      <div className="professional-month">
-        <div className="month-title">
+      <div className="calendar-month">
+        <div className="month-header">
           <h3>{hijriMonths[monthIndex]} {hijriYear} هـ</h3>
         </div>
         
-        <div className="month-calendar">
-          <div className="weekdays">
+        <div className="month-grid">
+          <div className="weekdays-row">
             {dayHeaders.map((day, index) => (
-              <div key={`header-${monthIndex}-${index}`} className="weekday">
+              <div key={`header-${monthIndex}-${index}`} className="weekday-cell">
                 {day}
               </div>
             ))}
           </div>
           
-          <div className="days-grid">
+          <div className="days-container">
             {days.map((day, index) => (
-              <div key={`day-${monthIndex}-${index}`} className="day-cell">
-                <div className="day-numbers">
-                  <span className="hijri-number">{day.hijriDate.hijriDay}</span>
-                  <span className="gregorian-number">{day.hijriDate.gregorianDate.getDate()}</span>
+              <div key={`day-${monthIndex}-${index}`} className="day-box">
+                <div className="day-header">
+                  <span className="hijri-date">{day.hijriDate.hijriDay}</span>
+                  <span className="gregorian-date">{day.hijriDate.gregorianDate.getDate()}</span>
                 </div>
-                <div className="day-events">
+                
+                <div className="day-content">
+                  {/* عرض المهام والمناسبات الموجودة */}
                   {day.events.slice(0, 2).map((event, eventIndex) => (
                     <div 
                       key={`event-${monthIndex}-${index}-${eventIndex}`} 
-                      className={`event-dot ${event.type === 'occasion' ? 'occasion' : 'task'}`}
-                      title={event.title}
-                    />
+                      className={`task-item ${event.type}`}
+                    >
+                      <span className="task-bullet">•</span>
+                      <span className="task-text">{event.title.length > 12 ? event.title.substring(0, 12) + '...' : event.title}</span>
+                    </div>
+                  ))}
+                  
+                  {/* خطوط فارغة لكتابة المهام */}
+                  {Array.from({ length: Math.max(1, 3 - day.events.length) }, (_, i) => (
+                    <div key={`empty-${i}`} className="empty-task-line"></div>
                   ))}
                 </div>
               </div>
@@ -82,31 +91,38 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
     );
   };
 
+  // تقسيم الأشهر إلى مجموعات من 4
+  const monthGroups = [];
+  for (let i = 0; i < 12; i += 4) {
+    monthGroups.push(Array.from({ length: 4 }, (_, j) => i + j));
+  }
+
   return (
-    <div className="professional-calendar">
-      {/* Header */}
-      <div className="calendar-header">
-        <div className="header-content">
-          <h1>التقويم الهجري {hijriYear} هـ</h1>
-          <div className="header-subtitle">
-            <p>تقويم أم القرى الشريف</p>
-            <div className="header-ornament"></div>
+    <div className="yearly-calendar">
+      {monthGroups.map((group, groupIndex) => (
+        <div key={`page-${groupIndex}`} className="calendar-page">
+          {/* العنوان في أول صفحة فقط */}
+          {groupIndex === 0 && (
+            <div className="page-header">
+              <h1>التقويم الهجري {hijriYear} هـ</h1>
+              <p className="subtitle">تقويم أم القرى الشريف</p>
+              <div className="header-divider"></div>
+            </div>
+          )}
+          
+          <div className="months-grid">
+            {group.map((monthIndex) => renderMonth(monthIndex))}
           </div>
+          
+          {/* تذييل في آخر صفحة فقط */}
+          {groupIndex === monthGroups.length - 1 && (
+            <div className="page-footer">
+              <div className="footer-divider"></div>
+              <p>تم إنشاؤه بعناية - التقويم الهجري الإلكتروني {new Date().getFullYear()}</p>
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Calendar Grid */}
-      <div className="calendar-content">
-        <div className="months-container">
-          {Array.from({ length: 12 }, (_, i) => renderMonth(i))}
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="calendar-footer">
-        <div className="footer-ornament"></div>
-        <p>تم إنشاؤه بعناية - التقويم الهجري الإلكتروني {new Date().getFullYear()}</p>
-      </div>
+      ))}
     </div>
   );
 };
