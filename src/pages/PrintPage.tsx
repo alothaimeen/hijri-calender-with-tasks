@@ -15,7 +15,7 @@ const PrintPage = () => {
 
   const handlePrint = () => {
     // إخفاء الأزرار قبل الطباعة
-    const buttons = document.querySelector('.print-controls');
+    const buttons = document.querySelector('.print-controls') as HTMLElement;
     if (buttons) buttons.style.display = 'none';
     
     window.print();
