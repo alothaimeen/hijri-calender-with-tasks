@@ -1,4 +1,3 @@
-
 import moment from 'moment-hijri';
 import { HijriDate, CalendarDay, CalendarEvent } from '@/types/calendar';
 import { Task } from '@/types/task';
@@ -72,9 +71,47 @@ export function getCurrentHijriDate(): { year: number; month: number } {
   };
 }
 
-// إزالة دالة المناسبات الإسلامية
+// إضافة المناسبات الإسلامية والوطنية
 export function getIslamicOccasions(hijriMonth: number, hijriDay: number): string[] {
-  return []; // إرجاع مصفوفة فارغة لإزالة المناسبات
+  const occasions: string[] = [];
+  
+  // المناسبات الهجرية
+  if (hijriMonth === 0 && hijriDay === 10) {
+    occasions.push('يوم عاشوراء');
+  }
+  if (hijriMonth === 1 && hijriDay === 23) {
+    occasions.push('عودة المعلمين');
+  }
+  if (hijriMonth === 2 && hijriDay === 1) {
+    occasions.push('بداية العام الدراسي');
+  }
+  if (hijriMonth === 8 && hijriDay === 23) {
+    occasions.push('بداية إجازة رمضان');
+  }
+  if (hijriMonth === 9 && hijriDay === 1) {
+    occasions.push('عيد الفطر');
+  }
+  if (hijriMonth === 11 && hijriDay === 10) {
+    occasions.push('عيد الأضحى');
+  }
+  
+  return occasions;
+}
+
+// إضافة المناسبات الوطنية
+export function getNationalOccasions(gregorianDate: Date): string[] {
+  const occasions: string[] = [];
+  const month = gregorianDate.getMonth() + 1; // الشهر يبدأ من 0
+  const day = gregorianDate.getDate();
+  
+  if (month === 9 && day === 23) {
+    occasions.push('اليوم الوطني');
+  }
+  if (month === 2 && day === 22) {
+    occasions.push('يوم التأسيس');
+  }
+  
+  return occasions;
 }
 
 export function convertTasksToCalendarEvents(tasks: Task[]): CalendarEvent[] {
@@ -90,33 +127,32 @@ export function convertTasksToCalendarEvents(tasks: Task[]): CalendarEvent[] {
       completed: task.completed
     });
     
-    // إضافة التكرار الأسبوعي إذا كان مطلوباً
-    if (task.recurring === 'weekly') {
+    // إضافة التكرار إذا كان مطلوباً
+    if (task.recurring && task.recurring !== 'none' && task.recurringCount) {
       const originalDate = new Date(task.createdAt);
-      const today = new Date();
-      const oneYearFromNow = new Date();
-      oneYearFromNow.setFullYear(today.getFullYear() + 1);
       
-      // إنشاء المهام المكررة أسبوعياً
-      let currentDate = new Date(originalDate);
-      let weekCount = 0;
-      
-      while (currentDate <= oneYearFromNow && weekCount < 52) {
-        // إضافة 7 أيام للحصول على التكرار الأسبوعي
-        currentDate = new Date(originalDate);
-        currentDate.setDate(originalDate.getDate() + (7 * (weekCount + 1)));
+      for (let i = 1; i <= task.recurringCount; i++) {
+        const newDate = new Date(originalDate);
         
-        if (currentDate <= oneYearFromNow) {
-          events.push({
-            id: `${task.id}-week-${weekCount + 1}`,
-            title: task.title,
-            type: 'task' as const,
-            date: new Date(currentDate),
-            completed: false
-          });
+        switch (task.recurring) {
+          case 'daily':
+            newDate.setDate(originalDate.getDate() + i);
+            break;
+          case 'weekly':
+            newDate.setDate(originalDate.getDate() + (i * 7));
+            break;
+          case 'monthly':
+            newDate.setMonth(originalDate.getMonth() + i);
+            break;
         }
         
-        weekCount++;
+        events.push({
+          id: `${task.id}-${i}`,
+          title: task.title,
+          type: 'task' as const,
+          date: newDate,
+          completed: false
+        });
       }
     }
   });

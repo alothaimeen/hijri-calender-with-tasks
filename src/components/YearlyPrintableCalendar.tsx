@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { CalendarDay } from '@/types/calendar';
-import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions } from '@/utils/hijriCalendar';
+import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getNationalOccasions } from '@/utils/hijriCalendar';
 import { Task } from '@/types/task';
 import moment from 'moment-hijri';
 
@@ -27,10 +27,22 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
         event.date.toDateString() === day.hijriDate.gregorianDate.toDateString()
       );
       
-      const occasions = getIslamicOccasions(day.hijriDate.hijriMonth, day.hijriDate.hijriDay);
-      occasions.forEach(occasion => {
+      // Add Islamic occasions
+      const islamicOccasions = getIslamicOccasions(day.hijriDate.hijriMonth, day.hijriDate.hijriDay);
+      islamicOccasions.forEach(occasion => {
         day.events.push({
-          id: `occasion-${day.hijriDate.gregorianDate.toISOString()}`,
+          id: `islamic-${day.hijriDate.gregorianDate.toISOString()}`,
+          title: occasion,
+          type: 'occasion',
+          date: day.hijriDate.gregorianDate
+        });
+      });
+      
+      // Add National occasions
+      const nationalOccasions = getNationalOccasions(day.hijriDate.gregorianDate);
+      nationalOccasions.forEach(occasion => {
+        day.events.push({
+          id: `national-${day.hijriDate.gregorianDate.toISOString()}`,
           title: occasion,
           type: 'occasion',
           date: day.hijriDate.gregorianDate
@@ -68,12 +80,15 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             {days.map((day, index) => {
               const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
               
-              // التحويل من الهجري إلى الميلادي باستخدام moment-hijri
               const gregorianDate = moment()
                 .iYear(day.hijriDate.hijriYear)
                 .iMonth(day.hijriDate.hijriMonth)
                 .iDate(day.hijriDate.hijriDay)
                 .toDate();
+              
+              // فصل المناسبات عن المهام
+              const occasions = day.events.filter(event => event.type === 'occasion');
+              const tasks = day.events.filter(event => event.type === 'task');
               
               return (
                 <div 
@@ -86,10 +101,20 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
                   </div>
                   
                   <div className="day-content">
-                    {/* عرض المهام الموجودة */}
-                    {day.events.slice(0, 2).map((event, eventIndex) => (
+                    {/* عرض المناسبات بخط صغير */}
+                    {occasions.map((event, eventIndex) => (
                       <div 
-                        key={`event-${monthIndex}-${index}-${eventIndex}`} 
+                        key={`occasion-${monthIndex}-${index}-${eventIndex}`} 
+                        className="occasion-item"
+                      >
+                        <span className="occasion-text">{event.title}</span>
+                      </div>
+                    ))}
+                    
+                    {/* عرض المهام */}
+                    {tasks.slice(0, 2).map((event, eventIndex) => (
+                      <div 
+                        key={`task-${monthIndex}-${index}-${eventIndex}`} 
                         className={`task-item ${event.type}`}
                       >
                         <span className="task-bullet">•</span>
@@ -98,7 +123,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
                     ))}
                     
                     {/* خطوط فارغة لكتابة المهام */}
-                    {Array.from({ length: Math.max(1, 3 - day.events.length) }, (_, i) => (
+                    {Array.from({ length: Math.max(1, 3 - tasks.length - occasions.length) }, (_, i) => (
                       <div key={`empty-${i}`} className="empty-task-line"></div>
                     ))}
                   </div>
@@ -195,6 +220,19 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
           .day-content {
             font-size: 6px;
             line-height: 1.2;
+          }
+          .occasion-item {
+            margin: 0.02cm 0;
+            font-size: 5px;
+            color: #d97706;
+            font-weight: bold;
+            text-align: center;
+            background-color: #fef3c7;
+            padding: 0.02cm;
+            border-radius: 1px;
+          }
+          .occasion-text {
+            font-size: 5px;
           }
           .task-item {
             margin: 0.05cm 0;

@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { CalendarDay } from '@/types/calendar';
+import { RecurringOptions } from '@/types/task';
 import CalendarDayCell from '@/components/CalendarDayCell';
 
 interface CalendarGridProps {
   calendarDays: CalendarDay[];
-  onAddTask: (title: string, description: string, date?: Date) => void;
+  onAddTask: (title: string, description: string, date?: Date, recurring?: RecurringOptions) => void;
   onToggleTask: (id: string) => void;
+  onDeleteTask: (id: string) => void;
 }
 
-const CalendarGrid = ({ calendarDays, onAddTask, onToggleTask }: CalendarGridProps) => {
+const CalendarGrid = ({ calendarDays, onAddTask, onToggleTask, onDeleteTask }: CalendarGridProps) => {
   const dayHeaders = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
   return (
@@ -34,8 +36,9 @@ const CalendarGrid = ({ calendarDays, onAddTask, onToggleTask }: CalendarGridPro
         <CalendarDayCell
           key={index}
           day={day}
-          onAddTask={(title) => onAddTask(title, '', day.hijriDate.gregorianDate)}
+          onAddTask={(title, description, date, recurring) => onAddTask(title, description, date || day.hijriDate.gregorianDate, recurring)}
           onToggleTask={onToggleTask}
+          onDeleteTask={onDeleteTask}
         />
       ))}
     </div>

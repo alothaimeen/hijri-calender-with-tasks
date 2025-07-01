@@ -1,6 +1,8 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Task } from '@/types/task';
+import { RecurringOptions } from '@/types/task';
 import TaskInput from '@/components/TaskInput';
 import CalendarView from '@/components/CalendarView';
 import TaskStats from '@/components/TaskStats';
@@ -16,28 +18,34 @@ const Index = () => {
 
   // تحميل المهام من التخزين المحلي عند بدء التطبيق
   useEffect(() => {
-    const savedTasks = localStorage.getItem('tasks');
+    const savedTasks = localStorage.getItem('hijri-calendar-tasks');
     if (savedTasks) {
-      const parsedTasks = JSON.parse(savedTasks).map((task: any) => ({
-        ...task,
-        createdAt: new Date(task.createdAt)
-      }));
-      setTasks(parsedTasks);
+      try {
+        const parsedTasks = JSON.parse(savedTasks).map((task: any) => ({
+          ...task,
+          createdAt: new Date(task.createdAt)
+        }));
+        setTasks(parsedTasks);
+      } catch (error) {
+        console.error('خطأ في تحميل المهام:', error);
+      }
     }
   }, []);
 
   // حفظ المهام في التخزين المحلي عند تغييرها
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('hijri-calendar-tasks', JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (title: string, description: string, date?: Date) => {
+  const addTask = (title: string, description: string, date?: Date, recurring?: RecurringOptions) => {
     const newTask: Task = {
       id: Date.now().toString(),
       title,
       description,
       completed: false,
       createdAt: date || new Date(),
+      recurring: recurring?.type || 'none',
+      recurringCount: recurring?.count || 0,
     };
     setTasks([newTask, ...tasks]);
   };
@@ -49,7 +57,10 @@ const Index = () => {
   };
 
   const deleteTask = (id: string) => {
-    setTasks(tasks.filter(task => task.id !== id));
+    // حذف المهمة الأساسية وجميع تكراراتها
+    setTasks(tasks.filter(task => 
+      task.id !== id && !task.id.startsWith(id + '-')
+    ));
   };
 
   const taskCounts = {
@@ -102,6 +113,7 @@ const Index = () => {
           tasks={tasks}
           onAddTask={addTask}
           onToggleTask={toggleTaskComplete}
+          onDeleteTask={deleteTask}
         />
 
         <Separator className="my-8 bg-gradient-to-r from-emerald-200 to-blue-200 h-1 print:hidden" />

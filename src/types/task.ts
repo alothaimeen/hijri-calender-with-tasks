@@ -5,7 +5,14 @@ export interface Task {
   description?: string;
   completed: boolean;
   createdAt: Date;
-  recurring?: 'weekly' | 'monthly' | 'none';
+  recurring?: 'none' | 'daily' | 'weekly' | 'monthly';
+  recurringCount?: number;
+  originalTaskId?: string; // للمهام المكررة
 }
 
 export type TaskFilter = 'all' | 'active' | 'completed';
+
+export interface RecurringOptions {
+  type: 'none' | 'daily' | 'weekly' | 'monthly';
+  count: number;
+}

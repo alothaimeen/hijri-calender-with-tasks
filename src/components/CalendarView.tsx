@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { CalendarDay, CalendarEvent } from '@/types/calendar';
 import { Task } from '@/types/task';
-import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getCurrentHijriDate } from '@/utils/hijriCalendar';
+import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions, getNationalOccasions, getCurrentHijriDate } from '@/utils/hijriCalendar';
 import CalendarHeader from '@/components/CalendarHeader';
 import CalendarGrid from '@/components/CalendarGrid';
 
@@ -10,9 +10,10 @@ interface CalendarViewProps {
   tasks: Task[];
   onAddTask: (title: string, description: string, date?: Date) => void;
   onToggleTask: (id: string) => void;
+  onDeleteTask: (id: string) => void;
 }
 
-const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => {
+const CalendarView = ({ tasks, onAddTask, onToggleTask, onDeleteTask }: CalendarViewProps) => {
   const [currentHijriDate, setCurrentHijriDate] = useState(() => getCurrentHijriDate());
   const [calendarDays, setCalendarDays] = useState<CalendarDay[]>([]);
 
@@ -27,10 +28,21 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
       );
       
       // Add Islamic occasions
-      const occasions = getIslamicOccasions(day.hijriDate.hijriMonth, day.hijriDate.hijriDay);
-      occasions.forEach(occasion => {
+      const islamicOccasions = getIslamicOccasions(day.hijriDate.hijriMonth, day.hijriDate.hijriDay);
+      islamicOccasions.forEach(occasion => {
         day.events.push({
-          id: `occasion-${day.hijriDate.gregorianDate.toISOString()}`,
+          id: `islamic-${day.hijriDate.gregorianDate.toISOString()}`,
+          title: occasion,
+          type: 'occasion',
+          date: day.hijriDate.gregorianDate
+        });
+      });
+      
+      // Add National occasions
+      const nationalOccasions = getNationalOccasions(day.hijriDate.gregorianDate);
+      nationalOccasions.forEach(occasion => {
+        day.events.push({
+          id: `national-${day.hijriDate.gregorianDate.toISOString()}`,
           title: occasion,
           type: 'occasion',
           date: day.hijriDate.gregorianDate
@@ -70,6 +82,7 @@ const CalendarView = ({ tasks, onAddTask, onToggleTask }: CalendarViewProps) => 
         calendarDays={calendarDays}
         onAddTask={onAddTask}
         onToggleTask={onToggleTask}
+        onDeleteTask={onDeleteTask}
       />
     </div>
   );
