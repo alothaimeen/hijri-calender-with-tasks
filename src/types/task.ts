@@ -5,6 +5,7 @@ export interface Task {
   description?: string;
   completed: boolean;
   createdAt: Date;
+  recurring?: 'weekly' | 'monthly' | 'none';
 }
 
 export type TaskFilter = 'all' | 'active' | 'completed';
