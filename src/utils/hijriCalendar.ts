@@ -14,14 +14,15 @@ const hijriMonths = [
 const arabicDays = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
 export function getHijriDate(gregorianDate: Date): HijriDate {
-  const hijriMoment = moment(gregorianDate).iYear();
-  const hijriMonth = moment(gregorianDate).iMonth();
-  const hijriDay = moment(gregorianDate).iDate();
+  const hijriMoment = moment(gregorianDate);
+  const hijriYear = hijriMoment.iYear();
+  const hijriMonth = hijriMoment.iMonth();
+  const hijriDay = hijriMoment.iDate();
   
   return {
     hijriDay: hijriDay,
     hijriMonth: hijriMonth,
-    hijriYear: hijriMoment,
+    hijriYear: hijriYear,
     gregorianDate: gregorianDate,
     dayName: arabicDays[gregorianDate.getDay()],
     monthName: hijriMonths[hijriMonth]
@@ -71,30 +72,74 @@ export function getCurrentHijriDate(): { year: number; month: number } {
   };
 }
 
+// إزالة دالة المناسبات الإسلامية
 export function getIslamicOccasions(hijriMonth: number, hijriDay: number): string[] {
-  const occasions: { [key: string]: string } = {
-    '0-1': 'رأس السنة الهجرية',
-    '0-10': 'يوم عاشوراء',
-    '2-12': 'مولد النبي محمد ﷺ',
-    '6-27': 'الإسراء والمعراج',
-    '7-15': 'ليلة النصف من شعبان',
-    '8-1': 'بداية شهر رمضان',
-    '8-27': 'ليلة القدر',
-    '9-1': 'عيد الفطر',
-    '11-9': 'يوم عرفة',
-    '11-10': 'عيد الأضحى'
-  };
-  
-  const key = `${hijriMonth}-${hijriDay}`;
-  return occasions[key] ? [occasions[key]] : [];
+  return []; // إرجاع مصفوفة فارغة لإزالة المناسبات
 }
 
 export function convertTasksToCalendarEvents(tasks: Task[]): CalendarEvent[] {
-  return tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    type: 'task' as const,
-    date: task.createdAt,
-    completed: task.completed
-  }));
+  const events: CalendarEvent[] = [];
+  
+  tasks.forEach(task => {
+    // إضافة المهمة الأساسية
+    events.push({
+      id: task.id,
+      title: task.title,
+      type: 'task' as const,
+      date: task.createdAt,
+      completed: task.completed
+    });
+    
+    // إضافة التكرار الأسبوعي إذا كان مطلوباً
+    if (task.recurring === 'weekly') {
+      const originalDate = new Date(task.createdAt);
+      const today = new Date();
+      const oneYearFromNow = new Date();
+      oneYearFromNow.setFullYear(today.getFullYear() + 1);
+      
+      // إنشاء المهام المكررة أسبوعياً
+      let currentDate = new Date(originalDate);
+      let weekCount = 0;
+      
+      while (currentDate <= oneYearFromNow && weekCount < 52) {
+        // إضافة 7 أيام للحصول على التكرار الأسبوعي
+        currentDate = new Date(originalDate);
+        currentDate.setDate(originalDate.getDate() + (7 * (weekCount + 1)));
+        
+        if (currentDate <= oneYearFromNow) {
+          events.push({
+            id: `${task.id}-week-${weekCount + 1}`,
+            title: task.title,
+            type: 'task' as const,
+            date: new Date(currentDate),
+            completed: false
+          });
+        }
+        
+        weekCount++;
+      }
+    }
+  });
+  
+  return events;
+}
+
+// دالة مساعدة للتحويل من التاريخ الهجري إلى الميلادي
+export function hijriToGregorian(hijriYear: number, hijriMonth: number, hijriDay: number): Date {
+  return moment().iYear(hijriYear).iMonth(hijriMonth).iDate(hijriDay).toDate();
+}
+
+// دالة مساعدة للتحويل من التاريخ الميلادي إلى الهجري
+export function gregorianToHijri(gregorianDate: Date): { year: number; month: number; day: number } {
+  const hijriMoment = moment(gregorianDate);
+  return {
+    year: hijriMoment.iYear(),
+    month: hijriMoment.iMonth(),
+    day: hijriMoment.iDate()
+  };
+}
+
+// دالة للحصول على عدد أيام الشهر الهجري
+export function getDaysInHijriMonth(hijriYear: number, hijriMonth: number): number {
+  return moment().iYear(hijriYear).iMonth(hijriMonth).endOf('iMonth').iDate();
 }

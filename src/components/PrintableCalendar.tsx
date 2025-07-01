@@ -105,6 +105,13 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
             padding: 3px 2px;
             border: 1px solid #ccc;
           }
+          .weekend-header {
+            background-color: #fee2e2;
+            color: #991b1b;
+          }
+          .weekend-day {
+            background-color: #fef2f2;
+          }
           .task-item {
             font-size: 6px;
             background-color: #f8f9fa;
@@ -152,58 +159,67 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
               
               <div className="calendar-grid">
                 {/* Day headers */}
-                {dayHeaders.map(day => (
-                  <div key={day} className="day-header">
+                {dayHeaders.map((day, index) => (
+                  <div 
+                    key={day} 
+                    className={`day-header ${
+                      index === 5 || index === 6 ? 'weekend-header' : ''
+                    }`}
+                  >
                     {day}
                   </div>
                 ))}
                 
                 {/* Calendar days */}
-                {days.map((day, index) => (
-                  <div
-                    key={index}
-                    className={`day-cell ${!day.isCurrentMonth ? 'opacity-50' : ''} ${
-                      day.isToday ? 'bg-yellow-100' : ''
-                    }`}
-                  >
-                    <div className="flex justify-between items-start mb-1">
-                      <div className="font-bold text-xs">
-                        {day.hijriDate.hijriDay}
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        {day.hijriDate.gregorianDate.getDate()}
-                      </div>
-                    </div>
-                    
-                    {/* Events and tasks */}
-                    <div className="space-y-1">
-                      {day.events.slice(0, 2).map(event => (
-                        <div
-                          key={event.id}
-                          className={
-                            event.type === 'occasion'
-                              ? 'occasion-item'
-                              : event.completed
-                                ? 'task-item line-through opacity-60'
-                                : 'task-item'
-                          }
-                        >
-                          {event.title.length > 15 
-                            ? event.title.substring(0, 15) + '...' 
-                            : event.title}
+                {days.map((day, index) => {
+                  const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
+                  
+                  return (
+                    <div
+                      key={index}
+                      className={`day-cell ${!day.isCurrentMonth ? 'opacity-50' : ''} ${
+                        day.isToday ? 'bg-yellow-100' : ''
+                      } ${isWeekend ? 'weekend-day' : ''}`}
+                    >
+                      <div className="flex justify-between items-start mb-1">
+                        <div className="font-bold text-xs">
+                          {day.hijriDate.hijriDay}
                         </div>
-                      ))}
-                      {day.events.length > 2 && (
-                        <div className="text-xs text-gray-500">
-                          +{day.events.length - 2}
+                        <div className="text-xs text-gray-600">
+                          {day.hijriDate.gregorianDate.getDate()}
                         </div>
-                      )}
+                      </div>
+                      
+                      {/* Events and tasks */}
+                      <div className="space-y-1">
+                        {day.events.slice(0, 2).map(event => (
+                          <div
+                            key={event.id}
+                            className={
+                              event.type === 'occasion'
+                                ? 'occasion-item'
+                                : event.completed
+                                  ? 'task-item line-through opacity-60'
+                                  : 'task-item'
+                            }
+                          >
+                            {event.title.length > 15 
+                              ? event.title.substring(0, 15) + '...' 
+                              : event.title}
+                          </div>
+                        ))}
+                        {day.events.length > 2 && (
+                          <div className="text-xs text-gray-500">
+                            +{day.events.length - 2}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Space for manual task */}
+                      <div className="manual-task-space"></div>
                     </div>
-                    
-                    {/* Space for manual task */}
-                    <div className="manual-task-space"></div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );

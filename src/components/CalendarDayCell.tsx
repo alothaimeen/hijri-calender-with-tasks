@@ -24,16 +24,25 @@ const CalendarDayCell = ({ day, onAddTask, onToggleTask }: CalendarDayCellProps)
     }
   };
 
+  // تحديد يوم الجمعة (5) والسبت (6) بناءً على getDay()
+  const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
+
   return (
     <Card className={`min-h-[140px] transition-all duration-300 hover:shadow-lg ${
       !day.isCurrentMonth ? 'opacity-50 bg-gray-50' : 
-      day.isToday ? 'ring-3 ring-emerald-400 bg-emerald-50 shadow-lg' : 'bg-white hover:shadow-md'
+      day.isToday ? 'ring-3 ring-emerald-400 bg-emerald-50 shadow-lg' : 
+      isWeekend ? 'bg-red-50 hover:bg-red-100 border-red-200' : 
+      'bg-white hover:shadow-md'
     }`}>
       <CardContent className="p-3">
         {/* Day header */}
         <div className="flex items-center justify-between mb-3">
           <div className="text-right">
-            <div className={`text-lg font-bold ${day.isToday ? 'text-emerald-600' : 'text-gray-800'}`}>
+            <div className={`text-lg font-bold ${
+              day.isToday ? 'text-emerald-600' : 
+              isWeekend ? 'text-red-600' : 
+              'text-gray-800'
+            }`}>
               {day.hijriDate.hijriDay}
             </div>
             <div className="text-xs text-gray-500 font-medium">

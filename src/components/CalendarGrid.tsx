@@ -15,8 +15,16 @@ const CalendarGrid = ({ calendarDays, onAddTask, onToggleTask }: CalendarGridPro
   return (
     <div className="grid grid-cols-7 gap-2 mb-6">
       {/* Day headers */}
-      {dayHeaders.map(day => (
-        <div key={day} className="p-4 text-center font-bold text-emerald-800 bg-gradient-to-b from-emerald-100 to-emerald-200 rounded-xl shadow-sm">
+      {dayHeaders.map((day, index) => (
+        <div 
+          key={day} 
+          className={`p-4 text-center font-bold rounded-xl shadow-sm ${
+            // تلوين الجمعة (index 5) والسبت (index 6)
+            index === 5 || index === 6
+              ? 'text-red-800 bg-gradient-to-b from-red-100 to-red-200'
+              : 'text-emerald-800 bg-gradient-to-b from-emerald-100 to-emerald-200'
+          }`}
+        >
           {day}
         </div>
       ))}
