@@ -82,7 +82,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
                 >
                   <div className="day-header">
                     <span className="hijri-date">{day.hijriDate.hijriDay}</span>
-                    <span className="gregorian-date">{gregorianDate.getDate()}</span>
+                    <span className="gregorian-date">{gregorianDate.getDate()}/{gregorianDate.getMonth() + 1}</span>
                   </div>
                   
                   <div className="day-content">
@@ -131,21 +131,6 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             margin: 0;
             padding: 1cm;
           }
-          .page-header {
-            text-align: center;
-            margin-bottom: 1cm;
-            border-bottom: 2px solid #333;
-            padding-bottom: 0.5cm;
-          }
-          .page-header h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 0.5cm;
-          }
-          .subtitle {
-            font-size: 14px;
-            color: #666;
-          }
           .months-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -187,9 +172,10 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             min-height: 2cm;
             padding: 0.1cm;
             position: relative;
+            background-color: white;
           }
           .weekend-day {
-            background-color: #fef2f2;
+            background-color: #f0fdf4 !important;
           }
           .day-header {
             display: flex;
@@ -223,40 +209,15 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             border-bottom: 1px solid #ddd;
             margin: 0.05cm 0;
           }
-          .page-footer {
-            text-align: center;
-            margin-top: 1cm;
-            padding-top: 0.5cm;
-            border-top: 1px solid #ccc;
-            font-size: 10px;
-            color: #666;
-          }
         }
         `}
       </style>
       
       {monthGroups.map((group, groupIndex) => (
         <div key={`page-${groupIndex}`} className="calendar-page">
-          {/* العنوان في أول صفحة فقط */}
-          {groupIndex === 0 && (
-            <div className="page-header">
-              <h1>التقويم الهجري {hijriYear} هـ</h1>
-              <p className="subtitle">تقويم أم القرى الشريف</p>
-              <div className="header-divider"></div>
-            </div>
-          )}
-          
           <div className="months-grid">
             {group.map((monthIndex) => renderMonth(monthIndex))}
           </div>
-          
-          {/* تذييل في آخر صفحة فقط */}
-          {groupIndex === monthGroups.length - 1 && (
-            <div className="page-footer">
-              <div className="footer-divider"></div>
-              <p>تم إنشاؤه بعناية - التقويم الهجري الإلكتروني {new Date().getFullYear()}</p>
-            </div>
-          )}
         </div>
       ))}
     </div>
