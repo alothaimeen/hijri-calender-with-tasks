@@ -3,6 +3,7 @@ import React from 'react';
 import { CalendarDay } from '@/types/calendar';
 import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions } from '@/utils/hijriCalendar';
 import { Task } from '@/types/task';
+import moment from 'moment-hijri';
 
 interface PrintableCalendarProps {
   tasks: Task[];
@@ -112,6 +113,21 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
           .weekend-day {
             background-color: #fef2f2;
           }
+          .day-dates {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 2px;
+          }
+          .hijri-date {
+            font-weight: bold;
+            font-size: 10px;
+            color: #333;
+          }
+          .gregorian-date {
+            font-size: 7px;
+            color: #666;
+          }
           .task-item {
             font-size: 6px;
             background-color: #f8f9fa;
@@ -174,6 +190,13 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
                 {days.map((day, index) => {
                   const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
                   
+                  // التحويل من الهجري إلى الميلادي باستخدام moment-hijri
+                  const gregorianDate = moment()
+                    .iYear(day.hijriDate.hijriYear)
+                    .iMonth(day.hijriDate.hijriMonth)
+                    .iDate(day.hijriDate.hijriDay)
+                    .toDate();
+                  
                   return (
                     <div
                       key={index}
@@ -181,12 +204,12 @@ const PrintableCalendar = ({ tasks, startYear, startMonth }: PrintableCalendarPr
                         day.isToday ? 'bg-yellow-100' : ''
                       } ${isWeekend ? 'weekend-day' : ''}`}
                     >
-                      <div className="flex justify-between items-start mb-1">
-                        <div className="font-bold text-xs">
+                      <div className="day-dates">
+                        <div className="hijri-date">
                           {day.hijriDate.hijriDay}
                         </div>
-                        <div className="text-xs text-gray-600">
-                          {day.hijriDate.gregorianDate.getDate()}
+                        <div className="gregorian-date">
+                          {gregorianDate.getDate()}
                         </div>
                       </div>
                       

@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { CalendarDay } from '@/types/calendar';
+import moment from 'moment-hijri';
 
 interface CalendarDayCellProps {
   day: CalendarDay;
@@ -27,6 +28,13 @@ const CalendarDayCell = ({ day, onAddTask, onToggleTask }: CalendarDayCellProps)
   // تحديد يوم الجمعة (5) والسبت (6) بناءً على getDay()
   const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
 
+  // التحويل من الهجري إلى الميلادي باستخدام moment-hijri
+  const gregorianDate = moment()
+    .iYear(day.hijriDate.hijriYear)
+    .iMonth(day.hijriDate.hijriMonth)
+    .iDate(day.hijriDate.hijriDay)
+    .toDate();
+
   return (
     <Card className={`min-h-[140px] transition-all duration-300 hover:shadow-lg ${
       !day.isCurrentMonth ? 'opacity-50 bg-gray-50' : 
@@ -46,7 +54,7 @@ const CalendarDayCell = ({ day, onAddTask, onToggleTask }: CalendarDayCellProps)
               {day.hijriDate.hijriDay}
             </div>
             <div className="text-xs text-gray-500 font-medium">
-              {day.hijriDate.gregorianDate.getDate()}/{day.hijriDate.gregorianDate.getMonth() + 1}
+              {gregorianDate.getDate()}/{gregorianDate.getMonth() + 1}
             </div>
           </div>
           <Button

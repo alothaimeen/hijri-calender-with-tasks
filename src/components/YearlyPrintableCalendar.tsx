@@ -3,6 +3,7 @@ import React from 'react';
 import { CalendarDay } from '@/types/calendar';
 import { generateHijriCalendarMonth, convertTasksToCalendarEvents, getIslamicOccasions } from '@/utils/hijriCalendar';
 import { Task } from '@/types/task';
+import moment from 'moment-hijri';
 
 interface YearlyPrintableCalendarProps {
   tasks: Task[];
@@ -67,6 +68,13 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             {days.map((day, index) => {
               const isWeekend = day.hijriDate.gregorianDate.getDay() === 5 || day.hijriDate.gregorianDate.getDay() === 6;
               
+              // التحويل من الهجري إلى الميلادي باستخدام moment-hijri
+              const gregorianDate = moment()
+                .iYear(day.hijriDate.hijriYear)
+                .iMonth(day.hijriDate.hijriMonth)
+                .iDate(day.hijriDate.hijriDay)
+                .toDate();
+              
               return (
                 <div 
                   key={`day-${monthIndex}-${index}`} 
@@ -74,7 +82,7 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
                 >
                   <div className="day-header">
                     <span className="hijri-date">{day.hijriDate.hijriDay}</span>
-                    <span className="gregorian-date">{day.hijriDate.gregorianDate.getDate()}</span>
+                    <span className="gregorian-date">{gregorianDate.getDate()}</span>
                   </div>
                   
                   <div className="day-content">
@@ -189,6 +197,14 @@ const YearlyPrintableCalendar = ({ tasks, hijriYear }: YearlyPrintableCalendarPr
             font-size: 8px;
             font-weight: bold;
             margin-bottom: 0.1cm;
+          }
+          .hijri-date {
+            font-size: 10px;
+            color: #333;
+          }
+          .gregorian-date {
+            font-size: 7px;
+            color: #666;
           }
           .day-content {
             font-size: 6px;
