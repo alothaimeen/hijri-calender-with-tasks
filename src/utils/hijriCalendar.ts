@@ -118,7 +118,7 @@ export function convertTasksToCalendarEvents(tasks: Task[]): CalendarEvent[] {
   const events: CalendarEvent[] = [];
   
   tasks.forEach(task => {
-    // إضافة المهمة الأساسية
+    // إضافة المهمة فقط بتاريخها المحدد
     events.push({
       id: task.id,
       title: task.title,
@@ -126,35 +126,6 @@ export function convertTasksToCalendarEvents(tasks: Task[]): CalendarEvent[] {
       date: task.createdAt,
       completed: task.completed
     });
-    
-    // إضافة التكرار إذا كان مطلوباً
-    if (task.recurring && task.recurring !== 'none' && task.recurringCount) {
-      const originalDate = new Date(task.createdAt);
-      
-      for (let i = 1; i <= task.recurringCount; i++) {
-        const newDate = new Date(originalDate);
-        
-        switch (task.recurring) {
-          case 'daily':
-            newDate.setDate(originalDate.getDate() + i);
-            break;
-          case 'weekly':
-            newDate.setDate(originalDate.getDate() + (i * 7));
-            break;
-          case 'monthly':
-            newDate.setMonth(originalDate.getMonth() + i);
-            break;
-        }
-        
-        events.push({
-          id: `${task.id}-${i}`,
-          title: task.title,
-          type: 'task' as const,
-          date: newDate,
-          completed: false
-        });
-      }
-    }
   });
   
   return events;
