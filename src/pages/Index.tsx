@@ -38,16 +38,55 @@ const Index = () => {
   }, [tasks]);
 
   const addTask = (title: string, description: string, date?: Date, recurring?: RecurringOptions) => {
-    const newTask: Task = {
+    const baseDate = date || new Date();
+    const newTasks: Task[] = [];
+
+    const baseTask: Task = {
       id: Date.now().toString(),
       title,
       description,
       completed: false,
-      createdAt: date || new Date(),
+      createdAt: baseDate,
       recurring: recurring?.type || 'none',
       recurringCount: recurring?.count || 0,
     };
-    setTasks([newTask, ...tasks]);
+
+    // إضافة المهمة الأساسية
+    newTasks.push(baseTask);
+
+    // إنشاء المهام المتكررة
+    if (recurring && recurring.type !== 'none' && recurring.count > 0) {
+      for (let i = 1; i < recurring.count; i++) {
+        const recurringDate = new Date(baseDate);
+        
+        switch (recurring.type) {
+          case 'daily':
+            recurringDate.setDate(baseDate.getDate() + i);
+            break;
+          case 'weekly':
+            recurringDate.setDate(baseDate.getDate() + (i * 7));
+            break;
+          case 'monthly':
+            recurringDate.setMonth(baseDate.getMonth() + i);
+            break;
+        }
+
+        const recurringTask: Task = {
+          id: `${baseTask.id}-${i}`,
+          title,
+          description,
+          completed: false,
+          createdAt: recurringDate,
+          recurring: recurring.type,
+          recurringCount: recurring.count,
+          originalTaskId: baseTask.id,
+        };
+
+        newTasks.push(recurringTask);
+      }
+    }
+
+    setTasks([...newTasks, ...tasks]);
   };
 
   const toggleTaskComplete = (id: string) => {
@@ -59,7 +98,7 @@ const Index = () => {
   const deleteTask = (id: string) => {
     // حذف المهمة الأساسية وجميع تكراراتها
     setTasks(tasks.filter(task => 
-      task.id !== id && !task.id.startsWith(id + '-')
+      task.id !== id && task.originalTaskId !== id && !task.id.startsWith(id + '-')
     ));
   };
 
